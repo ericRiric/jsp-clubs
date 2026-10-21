@@ -45,68 +45,111 @@ User responses never include the password (`UtilisateurResponseDTO` only exposes
 
 ## Testing with curl
 
-### Clubs
+Every command is on a single line so it can be pasted directly. Pick the section that matches your terminal, because quoting rules differ.
 
-```bash
-# List all clubs
+### Windows cmd
+
+```bat
 curl http://localhost:8080/api/clubs
 
-# Get one club
 curl http://localhost:8080/api/clubs/1
 
-# Create a club (expect 201)
-curl -X POST http://localhost:8080/api/clubs \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Club de cinéma", "description": "Projections et discussions."}'
+curl -X POST http://localhost:8080/api/clubs -H "Content-Type: application/json" -d "{\"name\": \"Club de cinema\", \"description\": \"Projections et discussions.\"}"
 
-# Update a club
-curl -X PUT http://localhost:8080/api/clubs/1 \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Club d'\''échecs avancé", "description": "Tournois et analyses de parties."}'
+curl -X PUT http://localhost:8080/api/clubs/1 -H "Content-Type: application/json" -d "{\"name\": \"Club d'echecs avance\", \"description\": \"Tournois et analyses de parties.\"}"
 
-# Delete a club (expect 204)
 curl -X DELETE http://localhost:8080/api/clubs/1
-```
 
-### Utilisateurs
-
-```bash
-# List all users (no password in the response)
 curl http://localhost:8080/api/utilisateurs
 
-# Get one user
 curl http://localhost:8080/api/utilisateurs/1
 
-# Create a user (expect 201)
-curl -X POST http://localhost:8080/api/utilisateurs \
-  -H "Content-Type: application/json" \
-  -d '{"nom": "charlie", "password": "charlie123"}'
+curl -X POST http://localhost:8080/api/utilisateurs -H "Content-Type: application/json" -d "{\"nom\": \"charlie\", \"password\": \"charlie123\"}"
 
-# Update a user (rename only, password stays unchanged)
-curl -X PUT http://localhost:8080/api/utilisateurs/2 \
-  -H "Content-Type: application/json" \
-  -d '{"nom": "alice2"}'
+curl -X PUT http://localhost:8080/api/utilisateurs/2 -H "Content-Type: application/json" -d "{\"nom\": \"alice2\"}"
 
-# Delete a user (expect 204)
 curl -X DELETE http://localhost:8080/api/utilisateurs/3
 ```
 
-### Error cases
+Error cases:
 
-```bash
-# 404: club that doesn't exist
+```bat
 curl -i http://localhost:8080/api/clubs/999
 
-# 409: duplicate username (admin is already seeded)
-curl -i -X POST http://localhost:8080/api/utilisateurs \
-  -H "Content-Type: application/json" \
-  -d '{"nom": "admin", "password": "whatever"}'
+curl -i -X POST http://localhost:8080/api/utilisateurs -H "Content-Type: application/json" -d "{\"nom\": \"admin\", \"password\": \"whatever\"}"
+```
+
+### Windows PowerShell
+
+Use `curl.exe`, not `curl` (in PowerShell, `curl` is an alias for `Invoke-WebRequest`).
+
+```powershell
+curl.exe http://localhost:8080/api/clubs
+
+curl.exe http://localhost:8080/api/clubs/1
+
+curl.exe -X POST http://localhost:8080/api/clubs -H "Content-Type: application/json" -d '{\"name\": \"Club de cinema\", \"description\": \"Projections et discussions.\"}'
+
+curl.exe -X PUT http://localhost:8080/api/clubs/1 -H "Content-Type: application/json" -d '{\"name\": \"Club echecs avance\", \"description\": \"Tournois.\"}'
+
+curl.exe -X DELETE http://localhost:8080/api/clubs/1
+
+curl.exe http://localhost:8080/api/utilisateurs
+
+curl.exe http://localhost:8080/api/utilisateurs/1
+
+curl.exe -X POST http://localhost:8080/api/utilisateurs -H "Content-Type: application/json" -d '{\"nom\": \"charlie\", \"password\": \"charlie123\"}'
+
+curl.exe -X PUT http://localhost:8080/api/utilisateurs/2 -H "Content-Type: application/json" -d '{\"nom\": \"alice2\"}'
+
+curl.exe -X DELETE http://localhost:8080/api/utilisateurs/3
+```
+
+Error cases:
+
+```powershell
+curl.exe -i http://localhost:8080/api/clubs/999
+
+curl.exe -i -X POST http://localhost:8080/api/utilisateurs -H "Content-Type: application/json" -d '{\"nom\": \"admin\", \"password\": \"whatever\"}'
+```
+
+### Git Bash / Linux / macOS
+
+```bash
+curl http://localhost:8080/api/clubs
+
+curl http://localhost:8080/api/clubs/1
+
+curl -X POST http://localhost:8080/api/clubs -H "Content-Type: application/json" -d '{"name": "Club de cinéma", "description": "Projections et discussions."}'
+
+curl -X PUT http://localhost:8080/api/clubs/1 -H "Content-Type: application/json" -d '{"name": "Club d'\''échecs avancé", "description": "Tournois et analyses de parties."}'
+
+curl -X DELETE http://localhost:8080/api/clubs/1
+
+curl http://localhost:8080/api/utilisateurs
+
+curl http://localhost:8080/api/utilisateurs/1
+
+curl -X POST http://localhost:8080/api/utilisateurs -H "Content-Type: application/json" -d '{"nom": "charlie", "password": "charlie123"}'
+
+curl -X PUT http://localhost:8080/api/utilisateurs/2 -H "Content-Type: application/json" -d '{"nom": "alice2"}'
+
+curl -X DELETE http://localhost:8080/api/utilisateurs/3
+```
+
+Error cases:
+
+```bash
+curl -i http://localhost:8080/api/clubs/999
+
+curl -i -X POST http://localhost:8080/api/utilisateurs -H "Content-Type: application/json" -d '{"nom": "admin", "password": "whatever"}'
 ```
 
 ### Tips
 
-- **`-i`** prints the status line and headers, useful for checking 201, 204, 404 and 409.
-- **Pretty output:** pipe through `jq`, e.g. `curl http://localhost:8080/api/clubs | jq`.
+- **Expected status codes:** 201 on create, 204 on delete, 404 for a missing id, 409 for a duplicate username.
+- **`-i`** prints the status line and headers, useful for checking those codes.
+- **Pretty output:** pipe through `jq`, e.g. `curl http://localhost:8080/api/clubs | jq` (bash/PowerShell).
 - **IDs:** after deletes, some ids may no longer exist. Run the list commands first to see which are available.
-- **Windows cmd:** replace the `\` line continuations with `^`, and escape inner quotes: `-d "{\"name\": \"Club de cinéma\", \"description\": \"Projections.\"}"`.
-- **PowerShell:** use `curl.exe` instead of `curl`, since `curl` is an alias for `Invoke-WebRequest`.
+- **Accents in cmd/PowerShell:** the examples avoid them because those terminals can mangle non-ASCII characters in request bodies. To use them in `cmd`, run `chcp 65001` first.
+- **`400 Bad Request`:** usually means the JSON body was broken by quoting (wrong section for your terminal) or the `-d` part was lost when the command was split across lines.
