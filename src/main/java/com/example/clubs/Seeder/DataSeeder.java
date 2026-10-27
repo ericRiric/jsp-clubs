@@ -7,6 +7,7 @@ import com.example.clubs.Repositories.IClubRepository;
 import com.example.clubs.Repositories.IRoleRepository;
 import com.example.clubs.Repositories.IUtilisateurRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,11 +17,13 @@ public class DataSeeder implements CommandLineRunner {
     private final IClubRepository clubRepository;
     private final IUtilisateurRepository utilisateurRepository;
     private final IRoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DataSeeder(IClubRepository clubRepository, IUtilisateurRepository utilisateurRepository,  IRoleRepository roleRepository) {
+    public DataSeeder(IClubRepository clubRepository, IUtilisateurRepository utilisateurRepository,  IRoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.clubRepository = clubRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -60,9 +63,9 @@ public class DataSeeder implements CommandLineRunner {
             return;
         }
         utilisateurRepository.saveAll(List.of(
-                Utilisateur.builder().nom("admin").password("admin123").role(roleRepository.findRoleByNom("ROLE_GOONER")).build(),
-                Utilisateur.builder().nom("alice").password("alice123").role(roleRepository.findRoleByNom("ROLE_USER")).build(),
-                Utilisateur.builder().nom("bob").password("bob123").role(roleRepository.findRoleByNom("ROLE_USER")).build()
+                Utilisateur.builder().nom("admin").password(passwordEncoder.encode("admin123")).role(roleRepository.findRoleByNom("ROLE_GOONER")).build(),
+                Utilisateur.builder().nom("alice").password(passwordEncoder.encode("alice123")).role(roleRepository.findRoleByNom("ROLE_USER")).build(),
+                Utilisateur.builder().nom("bob").password(passwordEncoder.encode("bob123")).role(roleRepository.findRoleByNom("ROLE_USER")).build()
         ));
     }
 }

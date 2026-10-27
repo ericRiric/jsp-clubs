@@ -5,6 +5,7 @@ import com.example.clubs.DTOs.UtilisateurResponseDTO;
 import com.example.clubs.Models.Utilisateur;
 import com.example.clubs.Repositories.IUtilisateurRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -14,9 +15,11 @@ import java.util.Optional;
 @Service
 public class UtilisateurService {
     private final IUtilisateurRepository utilisateurRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UtilisateurService(IUtilisateurRepository utilisateurRepository) {
+    public UtilisateurService(IUtilisateurRepository utilisateurRepository, PasswordEncoder passwordEncoder) {
         this.utilisateurRepository = utilisateurRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UtilisateurResponseDTO> findAll() {
@@ -35,7 +38,7 @@ public class UtilisateurService {
         }
         Utilisateur utilisateur = Utilisateur.builder()
                 .nom(dto.getNom())
-                .password(dto.getPassword())
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .build();
         return toResponse(utilisateurRepository.save(utilisateur));
     }
@@ -47,7 +50,7 @@ public class UtilisateurService {
         }
         existing.setNom(dto.getNom());
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-            existing.setPassword(dto.getPassword());
+            existing.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         return toResponse(utilisateurRepository.save(existing));
     }

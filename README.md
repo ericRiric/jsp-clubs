@@ -50,6 +50,8 @@ Every command is on a single line so it can be pasted directly. Pick the section
 ### Windows cmd
 
 ```bat
+curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"username\": \"admin\", \"password\": \"admin123\"}"
+
 curl http://localhost:8080/api/clubs
 
 curl http://localhost:8080/api/clubs/1
