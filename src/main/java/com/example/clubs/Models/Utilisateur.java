@@ -18,4 +18,8 @@ public class Utilisateur {
     @Column(unique = true)
     private String nom;
     private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 }
