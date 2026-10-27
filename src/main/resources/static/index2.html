@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clubs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F4FB; --surface:#FFFFFF; --ink:#1D1A3B; --muted:#6B6890; --line:#E3E1F2;
+  --accent:#3D3DEB; --accent-ink:#FFFFFF; --danger:#D6335A; --shadow:0 1px 2px rgba(29,26,59,.06), 0 8px 24px rgba(29,26,59,.06);
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#13112B; --surface:#1C1940; --ink:#EEEDFF; --muted:#9C99C6; --line:#2E2A5C;
+    --accent:#8B8BFF; --accent-ink:#13112B; --danger:#FF6B8B; --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+.side{position:sticky;top:0;height:100vh;padding:28px 20px;display:flex;flex-direction:column;gap:28px;border-right:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font:800 26px/1 var(--display);letter-spacing:-.02em}
+.mark{width:30px;height:30px;border-radius:9px 9px 9px 3px;background:var(--accent);display:grid;place-items:center;color:var(--accent-ink);font-size:17px}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav button{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border:0;border-radius:12px;background:none;cursor:pointer;font-weight:500;color:var(--muted);text-align:left}
+.nav button:hover{background:var(--surface)}
+.nav button[aria-current="page"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:var(--shadow)}
+.nav .count{font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:0 9px;min-width:28px;text-align:center}
+.conn{margin-top:auto;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--muted)}
+.conn label{display:flex;align-items:center;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--muted)}
+.dot.ok{background:#2BB59A}.dot.down{background:var(--danger)}
+.conn input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:13px}
+
+.main{padding:44px clamp(20px,4vw,56px) 80px;max-width:1180px;width:100%}
+h1{font:800 clamp(38px,5vw,60px)/1 var(--display);letter-spacing:-.03em;margin:0 0 10px}
+.sub{margin:0 0 30px;color:var(--muted);max-width:56ch}
+.bar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.search{flex:1 1 240px;position:relative}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.search input{width:100%;padding:12px 14px 12px 42px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:14px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:600}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}
+.btn.sm{padding:6px 12px;border-radius:10px;font-size:14px}
+.btn.quiet{border-color:transparent;background:none;color:var(--muted)}
+.btn.quiet:hover{color:var(--ink);background:var(--bg)}
+.btn.quiet.del:hover{color:var(--danger)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:10px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.tile{height:128px;border-radius:14px;display:grid;place-items:center;font:800 76px/1 var(--display);letter-spacing:-.04em;user-select:none}
+.card-body{padding:16px 10px 4px;flex:1}
+.card h3{margin:0 0 6px;font:600 21px/1.2 var(--display);letter-spacing:-.01em}
+.card p{margin:0;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-foot{display:flex;align-items:center;gap:4px;padding:10px 4px 2px}
+.card-foot .id{margin-right:auto;font-size:13px;color:var(--muted);padding-left:8px}
+
+.t0{background:#FFD7A8;color:#7A3E00}.t1{background:#C9F0E3;color:#0B5C47}.t2{background:#D9D6FF;color:#2B2790}
+.t3{background:#FFD0DC;color:#8A1636}.t4{background:#CFE6FF;color:#0F4C8A}.t5{background:#F3EEA6;color:#5C5600}
+
+.list{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+.row{display:flex;align-items:center;gap:16px;padding:14px 18px}
+.row+.row{border-top:1px solid var(--line)}
+.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:800 20px/1 var(--display);flex:none}
+.row .who{flex:1;min-width:0}
+.row .who strong{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.row .who span{font-size:13px;color:var(--muted)}
+
+.state{border:1.5px dashed var(--line);border-radius:22px;padding:48px 24px;text-align:center;color:var(--muted)}
+.state h3{font:600 22px var(--display);color:var(--ink);margin:0 0 6px}
+.state p{margin:0 auto 18px;max-width:46ch}
+.skel{height:240px;border-radius:22px;background:var(--surface);border:1px solid var(--line);opacity:.6}
+
+dialog{border:1px solid var(--line);border-radius:24px;padding:0;background:var(--surface);color:var(--ink);width:min(460px,calc(100vw - 32px));box-shadow:0 24px 80px rgba(10,8,40,.35)}
+dialog::backdrop{background:rgba(19,17,43,.5)}
+dialog[open]{animation:pop .16s ease-out}
+@keyframes pop{from{transform:translateY(8px) scale(.98);opacity:0}}
+.dlg{padding:28px}
+.dlg h2{font:800 28px/1.1 var(--display);letter-spacing:-.02em;margin:0 0 6px}
+.dlg .hint{color:var(--muted);margin:0 0 20px;font-size:15px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.field label{font-weight:600;font-size:14px}
+.field input,.field textarea{padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--bg);resize:vertical}
+.field input:focus,.field textarea:focus{outline:2px solid var(--accent);border-color:transparent}
+.field .err{color:var(--danger);font-size:14px;min-height:0}
+.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
+
+.toasts{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;z-index:50;width:max-content;max-width:calc(100vw - 32px)}
+.toast{background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-weight:500;box-shadow:var(--shadow)}
+.toast.bad{background:var(--danger);color:#fff}
+
+@media (max-width:760px){
+  .app{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;padding:16px 20px;border-right:0;border-bottom:1px solid var(--line);gap:14px}
+  .nav{flex-direction:row}.conn{margin:0;width:100%}
+  .main{padding-top:28px}
+}
+@media (prefers-reduced-motion:reduce){dialog[open]{animation:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="mark" aria-hidden="true">c</span>Clubs</div>
+    <nav class="nav" aria-label="Sections">
+      <button data-tab="clubs">Clubs <span class="count" id="nClubs">–</span></button>
+      <button data-tab="users">Users <span class="count" id="nUsers">–</span></button>
+    </nav>
+    <div class="conn">
+      <label><span class="dot" id="dot"></span><span id="status">Connecting…</span></label>
+      <input id="base" aria-label="API address" placeholder="http://localhost:8080" spellcheck="false">
+    </div>
+  </aside>
+
+  <main class="main">
+    <h1 id="title"></h1>
+    <p class="sub" id="sub"></p>
+    <div class="bar">
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" aria-label="Search" placeholder="Search">
+      </div>
+      <button class="btn primary" id="add"></button>
+    </div>
+    <div id="content"></div>
+  </main>
+</div>
+
+<dialog id="formDlg"><form class="dlg" id="form" novalidate></form></dialog>
+<dialog id="delDlg"><div class="dlg">
+  <h2 id="delTitle"></h2><p class="hint" id="delText"></p>
+  <div class="actions"><button class="btn" id="delCancel" type="button">Keep it</button><button class="btn danger" id="delOk" type="button"></button></div>
+</div></dialog>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+let base = "";
+try { base = localStorage.getItem("clubs-api-base") || ""; } catch (e) {}
+if (!base) base = location.protocol === "file:" ? "http://localhost:8080" : "";
+
+const state = { tab: "clubs", clubs: [], users: [], q: "", loading: true, error: null };
+
+const copy = {
+  clubs: { title: "Clubs", sub: "Everything students can join. Add a new club or tidy up an existing one.", add: "New club", noun: "club", path: "/api/clubs",
+           emptyTitle: "No clubs yet", emptyText: "Create the first club to get things started." },
+  users: { title: "Users", sub: "People with an account. Passwords are write-only and never shown here.", add: "New user", noun: "user", path: "/api/utilisateurs",
+           emptyTitle: "No users yet", emptyText: "Create a user to give someone access." }
+};
+
+class ApiError extends Error { constructor(status, message) { super(message); this.status = status; } }
+
+async function api(path, method = "GET", body) {
+  let res;
+  try {
+    res = await fetch(base.replace(/\/$/, "") + path, {
+      method,
+      headers: body ? { "Content-Type": "application/json" } : undefined,
+      body: body ? JSON.stringify(body) : undefined
+    });
+  } catch (e) {
+    throw new ApiError(0, "Can’t reach the API at " + (base || location.origin) + ".");
+  }
+  if (!res.ok) {
+    let msg = "";
+    try { const j = await res.json(); msg = j.message || j.error || ""; } catch (e) {}
+    throw new ApiError(res.status, msg);
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+function explain(err) {
+  if (err.status === 404) return "That item no longer exists. The list has been refreshed.";
+  if (err.status === 409) return "That username is already taken.";
+  if (err.status === 400) return "The server rejected those values. Check the fields and try again.";
+  return err.message || "Something went wrong. Try again.";
+}
+
+function toast(msg, bad) {
+  const t = document.createElement("div");
+  t.className = "toast" + (bad ? " bad" : "");
+  t.textContent = msg;
+  $("#toasts").append(t);
+  setTimeout(() => t.remove(), 3600);
+}
+
+async function load() {
+  state.loading = true; state.error = null; render();
+  try {
+    const [clubs, users] = await Promise.all([api("/api/clubs"), api("/api/utilisateurs")]);
+    state.clubs = clubs; state.users = users;
+    $("#dot").className = "dot ok"; $("#status").textContent = "Connected";
+  } catch (e) {
+    state.error = e;
+    $("#dot").className = "dot down"; $("#status").textContent = "Not connected";
+  }
+  state.loading = false; render();
+}
+
+function render() {
+  const c = copy[state.tab];
+  document.querySelectorAll(".nav button").forEach(b => {
+    if (b.dataset.tab === state.tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+  });
+  $("#nClubs").textContent = state.error ? "–" : state.clubs.length;
+  $("#nUsers").textContent = state.error ? "–" : state.users.length;
+  $("#title").textContent = c.title; $("#sub").textContent = c.sub;
+  $("#add").innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>' + c.add;
+  $("#q").placeholder = "Search " + c.title.toLowerCase();
+  document.title = c.title + " · Clubs";
+
+  const box = $("#content");
+  if (state.loading) { box.innerHTML = '<div class="grid">' + '<div class="skel"></div>'.repeat(3) + "</div>"; return; }
+  if (state.error) {
+    box.innerHTML = `<div class="state"><h3>Can’t load data</h3><p>${esc(explain(state.error))} Check that the API is running and that the address in the sidebar is right. If this page is opened from a file, the API must also allow CORS.</p><button class="btn primary" id="retry">Try again</button></div>`;
+    $("#retry").onclick = load; return;
+  }
+  const q = state.q.trim().toLowerCase();
+  const items = state[state.tab].filter(i => !q || [i.name, i.description, i.nom].some(v => (v || "").toLowerCase().includes(q)));
+  if (!items.length) {
+    box.innerHTML = q
+      ? `<div class="state"><h3>No matches</h3><p>Nothing matches “${esc(state.q)}”. Try a different word.</p></div>`
+      : `<div class="state"><h3>${c.emptyTitle}</h3><p>${c.emptyText}</p><button class="btn primary" id="empty-add">${c.add}</button></div>`;
+    const b = $("#empty-add"); if (b) b.onclick = () => openForm(); return;
+  }
+  const tone = i => "t" + (i.id % 6 + 6) % 6;
+  const actions = i => `<button class="btn quiet sm" data-edit="${i.id}">Edit</button><button class="btn quiet sm del" data-del="${i.id}">Delete</button>`;
+  box.innerHTML = state.tab === "clubs"
+    ? '<div class="grid">' + items.map(i => `
+        <article class="card">
+          <div class="tile ${tone(i)}" aria-hidden="true">${esc((i.name || "?").trim().charAt(0).toUpperCase())}</div>
+          <div class="card-body"><h3>${esc(i.name)}</h3><p>${esc(i.description) || "No description."}</p></div>
+          <div class="card-foot"><span class="id">ID ${i.id}</span>${actions(i)}</div>
+        </article>`).join("") + "</div>"
+    : '<div class="list">' + items.map(i => `
+        <div class="row">
+          <div class="avatar ${tone(i)}" aria-hidden="true">${esc((i.nom || "?").charAt(0).toUpperCase())}</div>
+          <div class="who"><strong>${esc(i.nom)}</strong><span>ID ${i.id}</span></div>
+          ${actions(i)}
+        </div>`).join("") + "</div>";
+}
+
+function find(id) { return state[state.tab].find(i => i.id === Number(id)); }
+
+/* Create / edit */
+function openForm(item) {
+  const tab = state.tab, editing = !!item, c = copy[tab];
+  const field = (id, label, val, extra = "") => `<div class="field"><label for="${id}">${label}</label>${extra.startsWith("<textarea")
+    ? extra.replace(">", ` id="${id}" name="${id}" rows="4">${esc(val)}`) + "</textarea>"
+    : `<input id="${id}" name="${id}" value="${esc(val)}" ${extra}>`}<div class="err" id="${id}-err"></div></div>`;
+  const fields = tab === "clubs"
+    ? field("name", "Name", item?.name || "", "autocomplete=off") + field("description", "Description", item?.description || "", "<textarea>")
+    : field("nom", "Username", item?.nom || "", "autocomplete=off") + (editing ? "" : field("password", "Password", "", 'type="password" autocomplete="new-password"'));
+  $("#form").innerHTML = `<h2>${editing ? "Edit " : "New "}${c.noun}</h2>
+    <p class="hint">${editing ? "Update the details, then save." : "Fill in the details to create a " + c.noun + "."}</p>${fields}
+    <div class="actions"><button type="button" class="btn" id="cancel">Cancel</button><button class="btn primary" type="submit">${editing ? "Save changes" : "Create " + c.noun}</button></div>`;
+  $("#cancel").onclick = () => $("#formDlg").close();
+  $("#form").onsubmit = async e => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    const required = tab === "clubs" ? ["name"] : editing ? ["nom"] : ["nom", "password"];
+    let ok = true;
+    for (const k of required) {
+      const msg = (data[k] || "").trim() ? "" : "This field is required.";
+      $("#" + k + "-err").textContent = msg; if (msg) ok = false;
+    }
+    if (!ok) return;
+    if (data.name) data.name = data.name.trim();
+    if (data.nom) data.nom = data.nom.trim();
+    try {
+      await api(c.path + (editing ? "/" + item.id : ""), editing ? "PUT" : "POST", data);
+      $("#formDlg").close();
+      toast(editing ? "Changes saved" : cap(c.noun) + " created");
+      await refresh();
+    } catch (err) {
+      if (err.status === 409 && $("#nom-err")) $("#nom-err").textContent = explain(err);
+      else toast(explain(err), true);
+      if (err.status === 404) { $("#formDlg").close(); await refresh(); }
+    }
+  };
+  $("#formDlg").showModal();
+  $("#form input").focus();
+}
+
+/* Delete */
+let pending = null;
+function askDelete(item) {
+  const c = copy[state.tab], label = item.name || item.nom;
+  pending = item;
+  $("#delTitle").textContent = "Delete " + c.noun + "?";
+  $("#delText").textContent = "“" + label + "” will be removed for good.";
+  $("#delOk").textContent = "Delete " + c.noun;
+  $("#delDlg").showModal();
+}
+$("#delCancel").onclick = () => $("#delDlg").close();
+$("#delOk").onclick = async () => {
+  const c = copy[state.tab];
+  try {
+    await api(c.path + "/" + pending.id, "DELETE");
+    toast(cap(c.noun) + " deleted");
+  } catch (err) { toast(explain(err), true); }
+  $("#delDlg").close();
+  await refresh();
+};
+
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+async function refresh() {
+  try { [state.clubs, state.users] = await Promise.all([api("/api/clubs"), api("/api/utilisateurs")]); state.error = null; }
+  catch (e) { state.error = e; }
+  render();
+}
+
+/* Wiring */
+document.querySelectorAll(".nav button").forEach(b => b.onclick = () => { state.tab = b.dataset.tab; state.q = ""; $("#q").value = ""; render(); });
+$("#add").onclick = () => openForm();
+$("#q").oninput = e => { state.q = e.target.value; render(); };
+$("#content").onclick = e => {
+  const ed = e.target.closest("[data-edit]"), del = e.target.closest("[data-del]");
+  if (ed) openForm(find(ed.dataset.edit));
+  if (del) askDelete(find(del.dataset.del));
+};
+$("#base").value = base;
+$("#base").onchange = e => {
+  base = e.target.value.trim();
+  try { localStorage.setItem("clubs-api-base", base); } catch (err) {}
+  load();
+};
+load();
+</script>
+</body>
+</html>

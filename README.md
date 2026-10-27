@@ -17,7 +17,7 @@ On startup, `DataSeeder` inserts sample data if the tables are empty:
 - **5 clubs** (chess, robotics, theatre, photography, reading)
 - **3 users**: `admin`, `alice`, `bob`
 
-> Passwords are stored in plain text for development only. Add a `PasswordEncoder` (e.g. `BCryptPasswordEncoder`) before using this in production.
+> Passwords are stored as BCrypt hashes. Use the seeded credentials (`admin` / `admin123`, `alice` / `alice123`, `bob` / `bob123`) to log in.
 
 ## Endpoints
 
@@ -43,6 +43,15 @@ On startup, `DataSeeder` inserts sample data if the tables are empty:
 
 User responses never include the password (`UtilisateurResponseDTO` only exposes `id` and `nom`).
 
+### Auth
+
+| Method | URL                  | Description                              | Success |
+|--------|----------------------|------------------------------------------|---------|
+| POST   | `/api/auth/login`    | Authenticate and receive a JWT token     | 200     |
+| POST   | `/api/auth/logout`   | Logout (stateless; client discards token) | 200     |
+
+Login accepts a JSON body with `username` and `password`. The response is the JWT token as plain text; send it as `Authorization: Bearer <token>` on protected requests.
+
 ## Testing with curl
 
 Every command is on a single line so it can be pasted directly. Pick the section that matches your terminal, because quoting rules differ.
@@ -51,6 +60,8 @@ Every command is on a single line so it can be pasted directly. Pick the section
 
 ```bat
 curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"username\": \"admin\", \"password\": \"admin123\"}"
+
+curl -X POST http://localhost:8080/api/auth/logout
 
 curl http://localhost:8080/api/clubs
 
@@ -86,6 +97,10 @@ curl -i -X POST http://localhost:8080/api/utilisateurs -H "Content-Type: applica
 Use `curl.exe`, not `curl` (in PowerShell, `curl` is an alias for `Invoke-WebRequest`).
 
 ```powershell
+curl.exe -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d '{\"username\": \"admin\", \"password\": \"admin123\"}'
+
+curl.exe -X POST http://localhost:8080/api/auth/logout
+
 curl.exe http://localhost:8080/api/clubs
 
 curl.exe http://localhost:8080/api/clubs/1
@@ -118,6 +133,10 @@ curl.exe -i -X POST http://localhost:8080/api/utilisateurs -H "Content-Type: app
 ### Git Bash / Linux / macOS
 
 ```bash
+curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d '{"username": "admin", "password": "admin123"}'
+
+curl -X POST http://localhost:8080/api/auth/logout
+
 curl http://localhost:8080/api/clubs
 
 curl http://localhost:8080/api/clubs/1
