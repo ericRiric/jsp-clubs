@@ -4,6 +4,7 @@ import com.example.clubs.DTOs.UtilisateurRequestDTO;
 import com.example.clubs.DTOs.UtilisateurResponseDTO;
 import com.example.clubs.Models.Utilisateur;
 import com.example.clubs.Repositories.IUtilisateurRepository;
+import jdk.jshell.execution.Util;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class UtilisateurService {
     public UtilisateurService(IUtilisateurRepository utilisateurRepository, PasswordEncoder passwordEncoder) {
         this.utilisateurRepository = utilisateurRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public Utilisateur getUtilisateurParNom(String nom) {
+        return utilisateurRepository.findDistinctFirstByNom(nom);
     }
 
     public List<UtilisateurResponseDTO> findAll() {
