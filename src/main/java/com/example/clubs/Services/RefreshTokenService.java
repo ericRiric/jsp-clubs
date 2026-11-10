@@ -28,6 +28,7 @@ public class RefreshTokenService {
                 .user(user)
                 .token(UUID.randomUUID().toString())
                 .expiryDate(Instant.now().plus(7, ChronoUnit.DAYS))
+                .isValid(true)
                 .build();
 
         return refreshTokenRepository.save(refreshToken);

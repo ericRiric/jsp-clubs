@@ -97,7 +97,6 @@ public class AuthController {
 
         // Invalider le jeton original
         refreshTokenService.invalidateRefreshToken(refreshToken);
-        refreshTokenService.invalidateRefreshToken(refreshToken);
 
         // Retourner l'authentification comme lors de la connexion
         return ResponseEntity.ok(new AuthResponse(
