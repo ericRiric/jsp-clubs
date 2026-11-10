@@ -3,6 +3,8 @@ package com.example.clubs.Models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "Utilisateur")
 @AllArgsConstructor
@@ -22,4 +24,7 @@ public class Utilisateur {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private Set<RefreshToken> refreshToken;
 }
