@@ -1,0 +1,28 @@
+info:
+  name: ajout club
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:8080/api/clubs
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Club de cinfelixghnemo",
+        "description": "Projections et discussions."
+      }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3OTQzMjYyOTksImlhdCI6MTc5NDMyNjI3OSwicm9sZXMiOiJST0xFX0dPT05FUiBGQUNUT1JfUEFTU1dPUkQifQ.MPLGtClngDJPwjVNi925qn9zAgzLKTtIWvt_qpL_UjIHAaDX9drFy4DxlkUE_DdrvaMxctmt4qw7QpPchufkqa3H2QWB1DzJTvbTjEbZC3Qz1f-MaYNkK57fMkLacccyY3x3RjSPtHc7UYZYLAyGcE1eOhNwKK6WmoBq7sEN8_YfYFKpQPnEgbDf_5LQAncPxmKRJNkZg9kHkt_hsmeDcWKQTGY522-BFA7bjE_v2Jb2yL12DreiklJt072CA2rUUfj2MnKzpBwKaQ1fIuoGikKehs1jelzmvGNGTwzJ9UfjDsuWqp4OCA8Se6xIh1p4paZLve0WYO8oTK2350-yOQ
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

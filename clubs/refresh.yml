@@ -1,0 +1,18 @@
+info:
+  name: refresh
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: http://localhost:8080/api/auth/refresh
+  headers:
+    - name: Cookie
+      value: refreshToken=7e7e8f32-2979-47ce-a089-4a37fdd8f66d
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
